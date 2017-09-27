@@ -1,1 +1,2 @@
 # Matlab-graduate-courses-problem-sets
+These are some solutions to problem sets in my PhD curses.  It contains come analysis of macro policy, macro-econometrics, maximum likelihood estimation, and networks. 
