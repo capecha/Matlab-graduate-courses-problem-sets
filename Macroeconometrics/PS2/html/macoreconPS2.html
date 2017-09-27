@@ -1,0 +1,647 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>macoreconPS2</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-06"><meta name="DC.source" content="macoreconPS2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">MACROECONOMETRICS PS#2</a></li><li><a href="#2">Problem 1</a></li><li><a href="#3">Problem 2</a></li><li><a href="#4">Problem 3</a></li><li><a href="#5">Problem 4</a></li><li><a href="#6">Problem 5</a></li><li><a href="#7">Problem 6</a></li><li><a href="#8">Problem 7</a></li></ul></div><h2>MACROECONOMETRICS PS#2<a name="1"></a></h2><p>Camilo Jos&eacute; Pecha and G&aacute;bor Kocsis</p><pre class="codeinput">clc
+clear <span class="string">all</span>
+load <span class="string">dataPS2</span>
+</pre><h2>Problem 1<a name="2"></a></h2><p>DESCRIPTIVE TEXT</p><pre class="codeinput"><span class="comment">%calculating the spread</span>
+spread=gs10(16:length(gs10),1)-ffund;
+
+<span class="comment">%creating within-quarter averages</span>
+avspread=zeros(238,1);
+
+<span class="keyword">for</span> i=4:3:715
+    avspread((i-1)/3,1)=(spread(i-3,1)+spread(i-2,1)+spread(i-1,1))/3;
+<span class="keyword">end</span>
+avspread=avspread(1:length(avspread)-1,1);
+<span class="comment">%calcualting the growth rate of real gdp</span>
+deltagdp=zeros(length(gdp)/2,1);
+
+<span class="keyword">for</span> i=31:(length(gdp)-1)
+    deltagdp(i,1)=400*(gdp(i+1,1)-gdp(i,1))/gdp(i,1);
+<span class="keyword">end</span>
+deltagdp=deltagdp(31:length(deltagdp),1);
+</pre><h2>Problem 2<a name="3"></a></h2><pre class="codeinput">GDPlags=lagmatrix(deltagdp,[0 1 2 3 4]);
+SPREADlags=lagmatrix(avspread,[0 1 2 3 4]);
+
+<span class="comment">%creating X and Y</span>
+<span class="comment">%Y=first colm t from GDP and Spread</span>
+<span class="comment">%GDP5, GDP6 GDP7 .... GDP267</span>
+<span class="comment">%Spr5, Spr6 Spr7 .... Spr267</span>
+
+
+<span class="comment">%X</span>
+<span class="comment">%first lag</span>
+<span class="comment">%1....1</span>
+<span class="comment">%GDP4...GDP267</span>
+<span class="comment">%Spr4...Spr267</span>
+
+<span class="comment">%second lag</span>
+<span class="comment">%GDP3...GDP267</span>
+<span class="comment">%Spr3...Spr267</span>
+
+<span class="comment">%third lag</span>
+<span class="comment">%GDP2...GDP267</span>
+<span class="comment">%Spr4...Spr267</span>
+
+<span class="comment">%fourth lag</span>
+<span class="comment">%GDP1...GDP267</span>
+<span class="comment">%Spr1...Spr267</span>
+
+cons=ones(length(SPREADlags)-4,1);
+Y=[GDPlags(5:length(SPREADlags),1) SPREADlags(5:length(SPREADlags),1)];
+X=[cons GDPlags(5:length(SPREADlags),2) SPREADlags(5:length(SPREADlags),2) <span class="keyword">...</span><span class="comment"> first lag</span>
+        GDPlags(5:length(SPREADlags),3) SPREADlags(5:length(SPREADlags),3) <span class="keyword">...</span><span class="comment"> second lag</span>
+        GDPlags(5:length(SPREADlags),4) SPREADlags(5:length(SPREADlags),4) <span class="keyword">...</span><span class="comment"> third lag</span>
+        GDPlags(5:length(SPREADlags),5) SPREADlags(5:length(SPREADlags),5)]; <span class="keyword">...</span><span class="comment"> fourth lag</span>
+
+phi1=inv(X'*X)*X'*Y;
+</pre><h2>Problem 3<a name="4"></a></h2><pre class="codeinput"><span class="comment">%Granager for GDP</span>
+<span class="comment">%First we compute the regression of $GDP_t=c+\alpha GDP_{t-1}+\beta</span>
+<span class="comment">%GDP_{t-2}+\gamma GDP_{t-3}+\delta GDP_{t-4}</span>
+<span class="comment">%Second we compute the regression of GDP on lags of GDP and lags of Spread</span>
+
+YG=[Y(:,1)];
+XG0=[cons X(:,2) X(:,4) X(:,6) X(:,8)];
+
+<span class="comment">%the regression for the restricted model</span>
+b0=inv(XG0'*XG0)*XG0'*YG;
+<span class="comment">%predicted GDP from restricted</span>
+GDP0hat=XG0*b0;
+error0=(YG-GDP0hat).^2;
+RSS0=sum(error0)
+<span class="comment">%Unrestricted regression</span>
+b1=inv(X'*X)*X'*Y;
+<span class="comment">%predicted GDP from unrestricted</span>
+GDP1hat=X*b1;
+error1=(YG-GDP1hat(:,1)).^2;
+RSS1=sum(error1)
+RSS_VAR=RSS1;
+T=length(Y);
+<span class="comment">%F-test</span>
+S=((RSS0-RSS1)/4)/(RSS1/(T-2*4-1))
+
+<span class="keyword">if</span> S&gt;2.3719
+    disp(<span class="string">'Reject null hypothesis '</span> )
+<span class="keyword">else</span>
+    disp(<span class="string">'Fail to reject null hypothesis '</span> )
+<span class="keyword">end</span>
+
+
+<span class="comment">%Now the proper exercise for Spread</span>
+
+YS=[Y(:,2)];
+XS0=[cons X(:,3) X(:,5) X(:,7) X(:,9)];
+
+<span class="comment">%the regression for the restricted model</span>
+b0=inv(XS0'*XS0)*XS0'*YS;
+<span class="comment">%predicted GDP from restricted</span>
+SPR0hat=XS0*b0;
+error0=(YS-SPR0hat).^2;
+RSS0=sum(error0)
+<span class="comment">%Unrestricted regression</span>
+b1=inv(X'*X)*X'*Y;
+<span class="comment">%predicted GDP from unrestricted</span>
+SPR1hat=X*b1;
+error1=(YS-SPR1hat(:,2)).^2;
+RSS1=sum(error1)
+
+<span class="comment">%F-test</span>
+S=((RSS0-RSS1)/4)/(RSS1/(T-2*4-1))
+
+<span class="keyword">if</span> S&gt;2.3719
+    disp(<span class="string">'Reject null hypothesis '</span> )
+<span class="keyword">else</span>
+    disp(<span class="string">'Fail to reject null hypothesis '</span> )
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+RSS0 =
+
+   2.5900e+03
+
+
+RSS1 =
+
+   2.3519e+03
+
+
+S =
+
+    5.6707
+
+Reject null hypothesis 
+
+RSS0 =
+
+  121.7510
+
+
+RSS1 =
+
+  112.5332
+
+
+S =
+
+    4.5871
+
+Reject null hypothesis 
+</pre><h2>Problem 4<a name="5"></a></h2><pre class="codeinput"><span class="comment">%Forcasting</span>
+cons=ones(length(SPREADlags)-4,1);
+Ybench=[GDPlags(5:length(SPREADlags),1) SPREADlags(5:length(SPREADlags),1)];
+Xbench=[cons GDPlags(5:length(SPREADlags),2) SPREADlags(5:length(SPREADlags),2) <span class="keyword">...</span><span class="comment"> first lag</span>
+        GDPlags(5:length(SPREADlags),3) SPREADlags(5:length(SPREADlags),3) <span class="keyword">...</span><span class="comment"> second lag</span>
+        GDPlags(5:length(SPREADlags),4) SPREADlags(5:length(SPREADlags),4) <span class="keyword">...</span><span class="comment"> third lag</span>
+        GDPlags(5:length(SPREADlags),5) SPREADlags(5:length(SPREADlags),5)]; <span class="keyword">...</span><span class="comment"> fourth lag</span>
+
+
+[N k]=size(Ybench);
+cut=122;
+
+residuals=zeros(N-cut-4,2);
+dgdp_hat=zeros(N-cut-4,2);
+
+<span class="keyword">for</span> t=cut:N-4
+
+b_AR1=inv(Xbench(1:t,:)'*Xbench(1:t,:))*Xbench(1:t,:)'*Ybench(1:t,:);
+
+<span class="comment">% One period ahead forecast</span>
+y_hat1=Xbench(t+1,:)*b_AR1;
+dgdp_hat(t-cut+1,1)=y_hat1(1);
+residuals(t-cut+1,1)=Y(t+1,1)-y_hat1(1);
+
+<span class="comment">% 2 period ahead forecast (YOU NEED IT FOR THE 4 PERIOD FORECAST)</span>
+X2= [1 y_hat1 Ybench(t,:) Ybench(t-1,:) Ybench(t-2,:)];
+y_hat2=X2*b_AR1;
+
+<span class="comment">% 3 period ahead forecast</span>
+X3= [1 y_hat2 y_hat1 Ybench(t,:) Ybench(t-1,:)];
+y_hat3=X3*b_AR1;
+
+<span class="comment">%4 period ahead forecast</span>
+X4= [1 y_hat3 y_hat2 y_hat1 Ybench(t,:)];
+y_hat4=X4*b_AR1;
+dgdp_hat(t-cut+1,2)=y_hat4(1);
+
+<span class="comment">%Replace values of t+1  by the forecast for SPREAD</span>
+residuals(t-cut+1,2)=Ybench(t+4,1)-y_hat4(1);
+
+<span class="keyword">end</span>
+
+y=Ybench(cut:N-4,1);
+
+
+figure(1)
+plot(dgdp_hat(:,1),<span class="string">'--'</span>,<span class="string">'LineWidth'</span>,1),hold <span class="string">on</span>;
+plot(Ybench(122:N,1));
+title(<span class="string">'Forcasted (one period) vs Real GDPrate'</span>)
+xlabel(<span class="string">'observations'</span>);
+hleg = legend(<span class="string">'Forcasted values'</span>,<span class="string">'Actual growth ofGDP'</span>,<span class="keyword">...</span>
+              <span class="string">'Location'</span>,<span class="string">'South'</span>);
+<span class="comment">% Make the text of the legend italic and color it brown</span>
+set(hleg,<span class="string">'FontAngle'</span>,<span class="string">'italic'</span>,<span class="string">'TextColor'</span>,[.3,.2,.1]);
+
+hold <span class="string">off</span>
+
+figure(2)
+plot(dgdp_hat(:,2),<span class="string">'--'</span>,<span class="string">'LineWidth'</span>,1),hold <span class="string">on</span>;
+plot(Ybench(122:N,1));
+title(<span class="string">'Forcasted (four periods) vs Real GDPrate'</span>)
+xlabel(<span class="string">'observations'</span>);
+hleg = legend(<span class="string">'Forcasted values'</span>,<span class="string">'Actual growth ofGDP'</span>,<span class="keyword">...</span>
+              <span class="string">'Location'</span>,<span class="string">'South'</span>);
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="macoreconPS2_01.png" alt=""> <img vspace="5" hspace="5" src="macoreconPS2_02.png" alt=""> <h2>Problem 5<a name="6"></a></h2><pre class="codeinput"><span class="comment">%Compute the MSE of the forcast</span>
+MSE_VAR1=sum(residuals(:,1).^2)
+MSE_VAR4=sum(residuals(:,2).^2)
+</pre><pre class="codeoutput">
+MSE_VAR1 =
+
+  769.4330
+
+
+MSE_VAR4 =
+
+  811.3922
+
+</pre><h2>Problem 6<a name="7"></a></h2><p>compute a AR(1) and compare its MSE with the obtained in the previews problem</p><pre class="codeinput"><span class="comment">% AR(1) process</span>
+
+cons=ones(length(SPREADlags)-4,1);
+Y_AR1=[GDPlags(5:length(SPREADlags),1)];
+X_AR1=[cons GDPlags(5:length(SPREADlags),2)];
+
+b_AR1=inv(X_AR1'*X_AR1)*X_AR1'*Y_AR1;
+re_AR1=Y_AR1-X_AR1*b_AR1;
+
+<span class="comment">% RSS of AR(1)</span>
+RSS_AR1=re_AR1'*re_AR1;
+
+<span class="keyword">if</span> RSS_VAR-RSS_AR1&gt;0
+    disp <span class="string">'VAR4 does not improve upon AR1'</span>
+<span class="keyword">else</span>
+    disp <span class="string">'VAR4 improves upon AR1'</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">VAR4 improves upon AR1
+</pre><h2>Problem 7<a name="8"></a></h2><pre class="codeinput"><span class="comment">%Impulse response functions of the Wold shock</span>
+
+phi1=(inv(Xbench'*Xbench)*Xbench'*Ybench)';
+phi1=phi1(:,2:end);
+[n m]=size(phi1);
+A=[phi1; eye(m-2) zeros(6,2)];
+A=A(1:8,:);
+
+h_max=40;
+
+impulse_gdp=zeros(h_max+1,2);
+impulse_spread=zeros(h_max+1,2);
+
+<span class="keyword">for</span> i=0:h_max
+ a=A^i;
+ impulse_gdp(i+1,1)=a(1,1); <span class="comment">%Shock of GDP on GDP</span>
+ impulse_gdp(i+1,2)=a(1,2); <span class="comment">%Shock of SPREAD on GDP</span>
+ impulse_spread(i+1,1)=a(2,1); <span class="comment">%Shock of GDP on SPREAD</span>
+ impulse_spread(i+1,2)=a(2,2); <span class="comment">%Shock of SPREAD on SPREAD</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Plots</span>
+figure(3)
+plot(impulse_gdp(:,1));
+title(<span class="string">'Impulse function of Shock of GDP growth on GDP growth'</span>)
+xlabel(<span class="string">'Periods'</span>);
+
+figure(4)
+plot(impulse_gdp(:,2));
+title(<span class="string">'Impulse function of Shock of spread on GDP growth'</span>)
+xlabel(<span class="string">'Periods'</span>);
+
+figure(5)
+plot(impulse_spread(:,1));
+title(<span class="string">'Impulse function of Shock of GDP growth on spread'</span>)
+xlabel(<span class="string">'Periods'</span>);
+
+figure(6)
+plot(impulse_spread(:,2));
+title(<span class="string">'Impulse function of Shock of spread on spread'</span>)
+xlabel(<span class="string">'Periods'</span>);
+</pre><img vspace="5" hspace="5" src="macoreconPS2_03.png" alt=""> <img vspace="5" hspace="5" src="macoreconPS2_04.png" alt=""> <img vspace="5" hspace="5" src="macoreconPS2_05.png" alt=""> <img vspace="5" hspace="5" src="macoreconPS2_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MACROECONOMETRICS PS#2
+% Camilo José Pecha and Gábor Kocsis
+
+clc
+clear all
+load dataPS2
+
+%% Problem 1
+% DESCRIPTIVE TEXT
+
+%calculating the spread
+spread=gs10(16:length(gs10),1)-ffund;
+
+%creating within-quarter averages
+avspread=zeros(238,1);
+
+for i=4:3:715
+    avspread((i-1)/3,1)=(spread(i-3,1)+spread(i-2,1)+spread(i-1,1))/3;
+end
+avspread=avspread(1:length(avspread)-1,1);
+%calcualting the growth rate of real gdp
+deltagdp=zeros(length(gdp)/2,1);
+
+for i=31:(length(gdp)-1)
+    deltagdp(i,1)=400*(gdp(i+1,1)-gdp(i,1))/gdp(i,1);
+end
+deltagdp=deltagdp(31:length(deltagdp),1);
+
+%% Problem 2
+
+GDPlags=lagmatrix(deltagdp,[0 1 2 3 4]);
+SPREADlags=lagmatrix(avspread,[0 1 2 3 4]);
+
+%creating X and Y
+%Y=first colm t from GDP and Spread
+%GDP5, GDP6 GDP7 .... GDP267
+%Spr5, Spr6 Spr7 .... Spr267
+
+
+%X
+%first lag
+%1....1
+%GDP4...GDP267
+%Spr4...Spr267
+
+%second lag
+%GDP3...GDP267
+%Spr3...Spr267
+
+%third lag
+%GDP2...GDP267
+%Spr4...Spr267
+
+%fourth lag
+%GDP1...GDP267
+%Spr1...Spr267
+
+cons=ones(length(SPREADlags)-4,1);
+Y=[GDPlags(5:length(SPREADlags),1) SPREADlags(5:length(SPREADlags),1)];
+X=[cons GDPlags(5:length(SPREADlags),2) SPREADlags(5:length(SPREADlags),2) ... first lag
+        GDPlags(5:length(SPREADlags),3) SPREADlags(5:length(SPREADlags),3) ... second lag
+        GDPlags(5:length(SPREADlags),4) SPREADlags(5:length(SPREADlags),4) ... third lag
+        GDPlags(5:length(SPREADlags),5) SPREADlags(5:length(SPREADlags),5)]; ... fourth lag
+    
+phi1=inv(X'*X)*X'*Y;
+
+
+%% Problem 3
+
+%Granager for GDP
+%First we compute the regression of $GDP_t=c+\alpha GDP_{t-1}+\beta
+%GDP_{t-2}+\gamma GDP_{t-3}+\delta GDP_{t-4}
+%Second we compute the regression of GDP on lags of GDP and lags of Spread
+
+YG=[Y(:,1)];
+XG0=[cons X(:,2) X(:,4) X(:,6) X(:,8)];
+
+%the regression for the restricted model
+b0=inv(XG0'*XG0)*XG0'*YG;
+%predicted GDP from restricted
+GDP0hat=XG0*b0;
+error0=(YG-GDP0hat).^2;
+RSS0=sum(error0)
+%Unrestricted regression
+b1=inv(X'*X)*X'*Y;
+%predicted GDP from unrestricted
+GDP1hat=X*b1;
+error1=(YG-GDP1hat(:,1)).^2;
+RSS1=sum(error1)
+RSS_VAR=RSS1;
+T=length(Y);
+%F-test
+S=((RSS0-RSS1)/4)/(RSS1/(T-2*4-1))
+
+if S>2.3719
+    disp('Reject null hypothesis ' )
+else
+    disp('Fail to reject null hypothesis ' )
+end
+
+
+%Now the proper exercise for Spread
+
+YS=[Y(:,2)];
+XS0=[cons X(:,3) X(:,5) X(:,7) X(:,9)];
+
+%the regression for the restricted model
+b0=inv(XS0'*XS0)*XS0'*YS;
+%predicted GDP from restricted
+SPR0hat=XS0*b0;
+error0=(YS-SPR0hat).^2;
+RSS0=sum(error0)
+%Unrestricted regression
+b1=inv(X'*X)*X'*Y;
+%predicted GDP from unrestricted
+SPR1hat=X*b1;
+error1=(YS-SPR1hat(:,2)).^2;
+RSS1=sum(error1)
+
+%F-test
+S=((RSS0-RSS1)/4)/(RSS1/(T-2*4-1))
+
+if S>2.3719
+    disp('Reject null hypothesis ' )
+else
+    disp('Fail to reject null hypothesis ' )
+end
+
+%% Problem 4 
+%Forcasting
+cons=ones(length(SPREADlags)-4,1);
+Ybench=[GDPlags(5:length(SPREADlags),1) SPREADlags(5:length(SPREADlags),1)];
+Xbench=[cons GDPlags(5:length(SPREADlags),2) SPREADlags(5:length(SPREADlags),2) ... first lag
+        GDPlags(5:length(SPREADlags),3) SPREADlags(5:length(SPREADlags),3) ... second lag
+        GDPlags(5:length(SPREADlags),4) SPREADlags(5:length(SPREADlags),4) ... third lag
+        GDPlags(5:length(SPREADlags),5) SPREADlags(5:length(SPREADlags),5)]; ... fourth lag
+
+
+[N k]=size(Ybench);
+cut=122; 
+
+residuals=zeros(N-cut-4,2);
+dgdp_hat=zeros(N-cut-4,2);
+
+for t=cut:N-4
+    
+b_AR1=inv(Xbench(1:t,:)'*Xbench(1:t,:))*Xbench(1:t,:)'*Ybench(1:t,:);
+
+% One period ahead forecast
+y_hat1=Xbench(t+1,:)*b_AR1;
+dgdp_hat(t-cut+1,1)=y_hat1(1);
+residuals(t-cut+1,1)=Y(t+1,1)-y_hat1(1);
+
+% 2 period ahead forecast (YOU NEED IT FOR THE 4 PERIOD FORECAST)
+X2= [1 y_hat1 Ybench(t,:) Ybench(t-1,:) Ybench(t-2,:)];
+y_hat2=X2*b_AR1;
+
+% 3 period ahead forecast
+X3= [1 y_hat2 y_hat1 Ybench(t,:) Ybench(t-1,:)];
+y_hat3=X3*b_AR1;
+
+%4 period ahead forecast
+X4= [1 y_hat3 y_hat2 y_hat1 Ybench(t,:)];
+y_hat4=X4*b_AR1;
+dgdp_hat(t-cut+1,2)=y_hat4(1);
+
+%Replace values of t+1  by the forecast for SPREAD
+residuals(t-cut+1,2)=Ybench(t+4,1)-y_hat4(1);
+                                                                                         
+end
+
+y=Ybench(cut:N-4,1);
+
+
+figure(1)
+plot(dgdp_hat(:,1),'REPLACE_WITH_DASH_DASH','LineWidth',1),hold on;
+plot(Ybench(122:N,1));
+title('Forcasted (one period) vs Real GDPrate')
+xlabel('observations');
+hleg = legend('Forcasted values','Actual growth ofGDP',...
+              'Location','South');
+% Make the text of the legend italic and color it brown
+set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1]);
+
+hold off
+
+figure(2)
+plot(dgdp_hat(:,2),'REPLACE_WITH_DASH_DASH','LineWidth',1),hold on;
+plot(Ybench(122:N,1));
+title('Forcasted (four periods) vs Real GDPrate')
+xlabel('observations');
+hleg = legend('Forcasted values','Actual growth ofGDP',...
+              'Location','South');
+hold off
+
+%% Problem 5
+%Compute the MSE of the forcast
+MSE_VAR1=sum(residuals(:,1).^2)
+MSE_VAR4=sum(residuals(:,2).^2)
+
+
+
+%% Problem 6
+% compute a AR(1) and compare its MSE with the obtained in the previews
+% problem
+
+% AR(1) process
+
+cons=ones(length(SPREADlags)-4,1);
+Y_AR1=[GDPlags(5:length(SPREADlags),1)];
+X_AR1=[cons GDPlags(5:length(SPREADlags),2)];
+
+b_AR1=inv(X_AR1'*X_AR1)*X_AR1'*Y_AR1;     
+re_AR1=Y_AR1-X_AR1*b_AR1;
+
+% RSS of AR(1)
+RSS_AR1=re_AR1'*re_AR1;
+
+if RSS_VAR-RSS_AR1>0
+    disp 'VAR4 does not improve upon AR1'
+else
+    disp 'VAR4 improves upon AR1'
+end
+
+
+
+%% Problem 7
+%Impulse response functions of the Wold shock
+
+phi1=(inv(Xbench'*Xbench)*Xbench'*Ybench)';
+phi1=phi1(:,2:end);
+[n m]=size(phi1);
+A=[phi1; eye(m-2) zeros(6,2)];
+A=A(1:8,:);
+
+h_max=40;
+
+impulse_gdp=zeros(h_max+1,2);
+impulse_spread=zeros(h_max+1,2);
+
+for i=0:h_max
+ a=A^i;
+ impulse_gdp(i+1,1)=a(1,1); %Shock of GDP on GDP
+ impulse_gdp(i+1,2)=a(1,2); %Shock of SPREAD on GDP
+ impulse_spread(i+1,1)=a(2,1); %Shock of GDP on SPREAD
+ impulse_spread(i+1,2)=a(2,2); %Shock of SPREAD on SPREAD
+end
+
+%Plots 
+figure(3)
+plot(impulse_gdp(:,1));
+title('Impulse function of Shock of GDP growth on GDP growth')
+xlabel('Periods');
+
+figure(4)
+plot(impulse_gdp(:,2));
+title('Impulse function of Shock of spread on GDP growth')
+xlabel('Periods');
+
+figure(5)
+plot(impulse_spread(:,1));
+title('Impulse function of Shock of GDP growth on spread')
+xlabel('Periods');
+
+figure(6)
+plot(impulse_spread(:,2));
+title('Impulse function of Shock of spread on spread')
+xlabel('Periods');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+
+##### SOURCE END #####
+--></body></html>
